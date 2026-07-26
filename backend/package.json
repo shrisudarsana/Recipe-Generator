@@ -1,0 +1,17 @@
+{
+  "name": "ai-recipe-generator-backend",
+  "version": "1.0.0",
+  "description": "Backend Cloud Function for AI-Powered Recipe Generator",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "npx @google-cloud/functions-framework --target=generateRecipe",
+    "deploy": "gcloud functions deploy generateRecipe --gen2 --runtime=nodejs20 --region=us-central1 --trigger-http --allow-unauthenticated --max-instances=1 --memory=256Mi"
+  },
+  "dependencies": {
+    "@google-cloud/functions-framework": "^3.4.1",
+    "@google/generative-ai": "^0.15.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5"
+  }
+}
