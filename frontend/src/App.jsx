@@ -163,7 +163,7 @@ export default function App() {
           <div className="welcome-layout" style={{ display: "flex", gap: "4rem", alignItems: "center", maxWidth: "920px", width: "100%", flexWrap: "wrap" }}>
             <div style={{ flex: "1 1 400px", minWidth: "300px", display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
               <div className="hero-badge">🍽️ Welcome Chef</div>
-              <h1 style={{ fontSize: "2.75rem", fontWeight: "700", color: "var(--text-primary)", marginBottom: "0.75rem", letterSpacing: "-0.02em", lineHeight: "1.2" }}>AI-Powered Recipe Lab</h1>
+              <h1 style={{ fontSize: "2.75rem", fontWeight: "700", color: "var(--text-primary)", marginBottom: "0.75rem", letterSpacing: "-0.02em", lineHeight: "1.2" }}>DoodleDish</h1>
               <p style={{ color: "var(--text-secondary)", fontSize: "1.05rem", lineHeight: "1.55", marginBottom: "1.5rem" }}>
                 Welcome to your kitchen workspace. Sign in to enter the lab, unlock recipe ideas, and store your culinary creations.
               </p>
