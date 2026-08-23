@@ -77,6 +77,24 @@ export default function RecipeForm({ onGenerate, loading }) {
     );
   };
 
+  const handleDirectGenerate = () => {
+    if (mode === "ingredients" && ingredients.length === 0) return;
+    if (mode === "dish" && !dishName.trim()) return;
+
+    onGenerate(
+      mode === "ingredients" ? ingredients : [],
+      {
+        dietaryRestrictions: dietary,
+        allergies: allergies,
+        cuisine: cuisine === "Any" ? "" : cuisine,
+        spiceLevel: spiceLevel === "Any" ? "" : spiceLevel,
+        calorieLimit: calories ? parseInt(calories) : null,
+        prepTime: prepTime ? parseInt(prepTime) : null
+      },
+      mode === "dish" ? dishName.trim() : ""
+    );
+  };
+
   return (
     <div className="form-card">
       {/* Wizard Progress Indicator */}
@@ -187,15 +205,32 @@ export default function RecipeForm({ onGenerate, loading }) {
               </div>
             )}
 
-            <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "2rem" }}>
+            <div style={{ display: "flex", justifyContent: "flex-end", gap: "1rem", marginTop: "2rem", flexWrap: "wrap" }}>
+              <button 
+                type="button" 
+                className="btn btn-secondary"
+                onClick={() => setStep(2)}
+                disabled={mode === "ingredients" ? ingredients.length === 0 : !dishName.trim()}
+                style={{ padding: "0.875rem 1.5rem" }}
+              >
+                {mode === "dish" ? "Customize (Diet, Spices...) ⚙️" : "Customize / Next ➔"}
+              </button>
+              
               <button 
                 type="button" 
                 className="btn btn-primary"
-                onClick={() => setStep(2)}
-                disabled={mode === "ingredients" ? ingredients.length === 0 : !dishName.trim()}
-                style={{ padding: "0.875rem 2.5rem" }}
+                onClick={handleDirectGenerate}
+                disabled={loading || (mode === "ingredients" ? ingredients.length === 0 : !dishName.trim())}
+                style={{ padding: "0.875rem 2rem", display: "flex", alignItems: "center", gap: "0.5rem" }}
               >
-                Next Step ➔
+                {loading ? (
+                  <>
+                    <div className="spinner" style={{ width: "18px", height: "18px" }}></div>
+                    Crafting...
+                  </>
+                ) : (
+                  "Generate Recipe 🍳"
+                )}
               </button>
             </div>
           </div>
