@@ -36,15 +36,19 @@ export default function AuthForm({ onClose, isEmbed = false }) {
       }
     } catch (err) {
       console.error(err);
-      let cleanMsg = "Authentication failed. Please check your credentials.";
+      let cleanMsg = `Authentication failed: ${err.message}`;
       if (err.code === "auth/email-already-in-use") {
         cleanMsg = "This email is already in use.";
       } else if (err.code === "auth/weak-password") {
         cleanMsg = "Password should be at least 6 characters.";
-      } else if (err.code === "auth/invalid-credential" || err.code === "auth/user-not-found" || err.code === "auth/wrong-password") {
+      } else if (err.code === "auth/invalid-credential" || err.code === "auth/wrong-password") {
         cleanMsg = "Invalid email or password.";
+      } else if (err.code === "auth/user-not-found") {
+        cleanMsg = isForgotPassword ? "No account found with this email address." : "Invalid email or password.";
       } else if (err.code === "auth/missing-email") {
         cleanMsg = "Please enter your email address.";
+      } else if (err.code === "auth/invalid-email") {
+        cleanMsg = "Please enter a valid email address.";
       }
       setError(cleanMsg);
     } finally {
