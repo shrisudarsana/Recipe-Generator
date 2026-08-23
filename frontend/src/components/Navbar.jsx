@@ -16,7 +16,7 @@ export default function Navbar({ activeTab, setActiveTab, user, setShowAuthModal
     <header className="header">
       <div className="header-content">
         <a href="#" className="logo" onClick={() => setActiveTab("generator")}>
-          <span>🍳</span> AI Recipe Lab
+          <span>🍳</span> DoodleDish
         </a>
         
         <nav className="nav-links">

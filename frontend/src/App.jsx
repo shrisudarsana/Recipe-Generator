@@ -143,7 +143,7 @@ export default function App() {
     return (
       <div className="loading-container" style={{ marginTop: "10rem" }}>
         <div className="spinner"></div>
-        <p className="loading-text">Starting AI Recipe Lab...</p>
+        <p className="loading-text">Starting DoodleDish...</p>
       </div>
     );
   }
@@ -154,7 +154,7 @@ export default function App() {
         <header className="header">
           <div className="header-content" style={{ justifyContent: "center" }}>
             <span className="logo" style={{ cursor: "default" }}>
-              <span>🍳</span> AI Recipe Lab
+              <span>🍳</span> DoodleDish
             </span>
           </div>
         </header>
