@@ -14,7 +14,7 @@ const corsHandler = cors({ origin: true });
 // Note: GEMINI_API_KEY is retrieved from environment variables
 const apiKey = process.env.GEMINI_API_KEY;
 
-functions.http("generateRecipe", (req, res) => {
+export default async function handler(req, res) {
   // Wrap with CORS middleware
   corsHandler(req, res, async () => {
     // Only allow POST requests
@@ -54,20 +54,35 @@ functions.http("generateRecipe", (req, res) => {
       console.log("Constraints:", JSON.stringify(parsedConstraints));
 
       const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({
-        model: "gemini-3.5-flash",
-        generationConfig: {
-          responseMimeType: "application/json",
-          responseSchema: recipeResponseSchema,
-        },
-      });
-
-      // Build primary prompt
       const promptText = buildRecipePrompt(ingredients || [], parsedConstraints, dishName);
 
-      // Call Gemini API
-      const result = await model.generateContent(promptText);
-      const textResponse = result.response.text();
+      let modelInstance;
+      let result;
+      let textResponse = "";
+
+      try {
+        console.log("Attempting generation with gemini-3.5-flash...");
+        modelInstance = genAI.getGenerativeModel({
+          model: "gemini-3.5-flash",
+          generationConfig: {
+            responseMimeType: "application/json",
+            responseSchema: recipeResponseSchema,
+          },
+        });
+        result = await modelInstance.generateContent(promptText);
+        textResponse = result.response.text();
+      } catch (err) {
+        console.warn("gemini-3.5-flash failed or was unavailable. Retrying with gemini-1.5-flash...", err.message);
+        modelInstance = genAI.getGenerativeModel({
+          model: "gemini-1.5-flash",
+          generationConfig: {
+            responseMimeType: "application/json",
+            responseSchema: recipeResponseSchema,
+          },
+        });
+        result = await modelInstance.generateContent(promptText);
+        textResponse = result.response.text();
+      }
       
       let parsedData;
       try {
@@ -96,7 +111,7 @@ ${validationResult.violations.map(v => `- ${v}`).join("\n")}
 
 Please re-generate the recipes and ensure they STRICTLY comply with the constraints and contain NONE of the forbidden ingredients.`;
 
-        const retryResult = await model.generateContent(retryPrompt);
+        const retryResult = await modelInstance.generateContent(retryPrompt);
         const retryText = retryResult.response.text();
         
         try {
@@ -125,4 +140,6 @@ Please re-generate the recipes and ensure they STRICTLY comply with the constrai
       });
     }
   });
-});
+}
+
+functions.http("generateRecipe", handler);
